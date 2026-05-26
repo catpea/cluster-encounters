@@ -1,5 +1,6 @@
 # Full Milky Way globular cluster catalog from Baumgardt & Vasiliev.
-# Downloaded by scripts/fetch-full-catalog.py.
+# Downloaded by scripts/fetch-full-catalog.py for inspiration, dreaming, education, and entertainnment purposes only
+# (C) Holger Baumgardt, Antonio Sollima, Michael Hilker, Andrea Bellini, Eugene Vasiliev, Vincent Henault-Brunet & Nolan Dickson, March 2023 
 # name, RA(deg), Dec(deg), distance(kpc), pmRA*(mas/yr), pmDec(mas/yr), RV(km/s), mass(M_sun), tidal_radius(pc)
 NGC 104,6.023792,-72.081306,4.52,5.253,-2.557,-17.45,8.530e+05,124.6
 NGC 288,13.188500,-26.582611,8.99,4.157,-5.705,-44.45,9.620e+04,95.2
@@ -166,3 +167,5 @@ NGC 7099,325.092133,-23.179861,8.46,-0.732,-7.307,-185.19,1.210e+05,71.2
 Pal 12,326.661804,-21.252611,18.49,-3.225,-3.320,27.91,6.190e+03,64.0
 Pal 13,346.685190,12.771539,23.48,1.740,0.116,25.30,2.780e+03,37.6
 NGC 7492,347.111170,-15.611469,24.39,0.777,-2.321,-176.70,1.970e+04,85.7
+
+
