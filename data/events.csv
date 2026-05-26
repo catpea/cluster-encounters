@@ -1,0 +1,11 @@
+# name, age(Ma), type
+# Major Phanerozoic biological and geochemical events.
+# Type: cull (extinction, anoxic crisis) or bloom (radiation, recovery, climatic optimum)
+End-Permian Mass Extinction, 251.9, cull
+Carnian Pluvial Event,       233.0, bloom
+End-Triassic Extinction,     201.4, cull
+Toarcian Anoxic Event,       183.0, cull
+Cenomanian-Turonian Event,    93.9, cull
+K-Pg Mass Extinction,         66.0, cull
+PETM (Paleocene-Eocene),      56.0, bloom
+Eocene-Oligocene Boundary,    33.9, cull

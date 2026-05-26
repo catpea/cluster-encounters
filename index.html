@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Furniture of the Galaxy</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --bg: #060914;
+  --bg-deep: #030610;
+  --bg-card: #0d1530;
+  --bg-card-hover: #131c3e;
+  --cream: #f0e7d2;
+  --cream-soft: #cfc4a8;
+  --cream-dim: #968b6d;
+  --cream-deep: #66614a;
+  --amber: #d99a3a;
+  --amber-bright: #f5c25b;
+  --amber-soft: #c08a2e;
+  --rule: #2a3a55;
+  --rule-bright: #3a4d70;
+  --line: #1a2540;
+  --hit-soft: rgba(217, 154, 58, 0.09);
+  --hit-strong: rgba(217, 154, 58, 0.18);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--cream);
+  font-family: 'EB Garamond', serif;
+  font-size: 17.5px;
+  line-height: 1.62;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(ellipse at 10% 5%, rgba(217, 154, 58, 0.06) 0%, transparent 55%),
+    radial-gradient(ellipse at 95% 95%, rgba(70, 110, 220, 0.05) 0%, transparent 55%),
+    radial-gradient(ellipse at 50% 50%, rgba(180, 90, 50, 0.025) 0%, transparent 70%);
+}
+
+#starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 80px 36px 96px;
+}
+
+/* Header */
+header {
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 36px;
+  margin-bottom: 48px;
+}
+
+.eyebrow {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--amber);
+  margin-bottom: 18px;
+}
+
+h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: 58px;
+  line-height: 1.04;
+  margin: 0 0 14px 0;
+  letter-spacing: -0.018em;
+  color: var(--cream);
+}
+
+.sub {
+  font-style: italic;
+  color: var(--cream-soft);
+  font-size: 19px;
+  max-width: 680px;
+  line-height: 1.5;
+}
+
+/* Sections */
+section { margin-bottom: 52px; }
+
+h2 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 500;
+  font-size: 28px;
+  color: var(--amber-bright);
+  margin: 0 0 6px 0;
+  letter-spacing: 0.003em;
+}
+
+h2 + .lede {
+  color: var(--cream-soft);
+  font-style: italic;
+  margin: 0 0 22px 0;
+  font-size: 16px;
+}
+
+.intro p { max-width: 720px; }
+
+p { margin: 0 0 14px 0; }
+
+code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  color: var(--amber-bright);
+  background: rgba(217, 154, 58, 0.08);
+  padding: 1px 6px;
+  border-radius: 2px;
+}
+
+/* Inputs */
+textarea {
+  width: 100%;
+  background: var(--bg-deep);
+  color: var(--cream);
+  border: 1px solid var(--rule);
+  padding: 16px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.6;
+  resize: vertical;
+  transition: border-color 0.2s;
+}
+textarea:focus { outline: none; border-color: var(--amber); }
+
+.controls {
+  display: flex;
+  gap: 26px;
+  align-items: end;
+  margin: 26px 0 12px;
+  flex-wrap: wrap;
+}
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.control label {
+  font-family: 'EB Garamond', serif;
+  font-style: italic;
+  font-size: 14.5px;
+  color: var(--cream-soft);
+}
+input[type="number"] {
+  background: var(--bg-deep);
+  color: var(--cream);
+  border: 1px solid var(--rule);
+  padding: 8px 12px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  width: 92px;
+  transition: border-color 0.2s;
+}
+input[type="number"]:focus { outline: none; border-color: var(--amber); }
+
+button {
+  background: transparent;
+  color: var(--amber-bright);
+  border: 1px solid var(--amber);
+  padding: 13px 32px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.22s ease;
+  font-weight: 500;
+}
+button:hover {
+  background: var(--amber);
+  color: var(--bg-deep);
+  letter-spacing: 0.13em;
+}
+button:disabled { opacity: 0.4; cursor: wait; }
+
+/* Cards */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--amber);
+  padding: 22px 26px;
+  margin: 18px 0;
+  transition: all 0.25s ease;
+}
+.card:hover {
+  background: var(--bg-card-hover);
+  border-left-width: 5px;
+}
+
+.card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 18px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+.card-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 24px;
+  color: var(--amber-bright);
+  font-weight: 500;
+}
+.card-name .common {
+  color: var(--cream);
+  font-style: italic;
+  font-weight: 400;
+}
+.card-name .ngc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--cream-dim);
+  font-weight: 400;
+  letter-spacing: 0.08em;
+}
+.card-impulse {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--amber);
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.card-desc {
+  color: var(--cream-soft);
+  font-size: 16px;
+  margin: 6px 0 18px 0;
+  line-height: 1.55;
+  max-width: 720px;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 32px;
+  margin-top: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.7;
+}
+.card-grid .label {
+  color: var(--cream-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 10px;
+  margin-bottom: 2px;
+}
+.card-grid .value {
+  color: var(--cream);
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+.card-grid .value.hi { color: var(--amber-bright); }
+.card-grid .ev {
+  color: var(--amber-bright);
+  font-style: italic;
+  font-family: 'EB Garamond', serif;
+  font-size: 15px;
+}
+.card-grid .ev-type {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  color: var(--cream-dim);
+  letter-spacing: 0.12em;
+  margin-left: 4px;
+}
+
+.card-chart {
+  margin-top: 18px;
+  background: var(--bg-deep);
+  border: 1px solid var(--line);
+  padding: 14px 16px 10px 16px;
+}
+
+.no-matches {
+  background: var(--bg-deep);
+  border-left: 2px solid var(--cream-deep);
+  padding: 20px 22px;
+  font-style: italic;
+  color: var(--cream-soft);
+  font-size: 16px;
+  margin: 18px 0;
+}
+
+/* Full table */
+.table-wrap {
+  overflow-x: auto;
+  margin-top: 18px;
+  border: 1px solid var(--rule);
+  background: var(--bg-deep);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  min-width: 800px;
+}
+th {
+  text-align: left;
+  color: var(--amber);
+  font-weight: 500;
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--rule);
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  font-size: 10px;
+  background: var(--bg-card);
+}
+td {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--line);
+  color: var(--cream);
+}
+tr.hit { background: var(--hit-soft); }
+tr.hit:hover { background: var(--hit-strong); }
+tr.hit td { color: var(--amber-bright); }
+tr:hover { background: var(--bg-card); }
+.num { text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Status & misc */
+#status {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11.5px;
+  color: var(--cream-soft);
+  margin-top: 14px;
+  letter-spacing: 0.04em;
+}
+#status.thinking::after {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin-left: 8px;
+  background: var(--amber);
+  border-radius: 50%;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+
+.note {
+  background: var(--bg-deep);
+  border-left: 2px solid var(--amber);
+  padding: 16px 22px;
+  margin: 22px 0;
+  font-size: 15.5px;
+  color: var(--cream-soft);
+  font-style: italic;
+  line-height: 1.6;
+  max-width: 760px;
+}
+
+details { margin: 28px 0; }
+summary {
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--amber);
+  padding: 8px 0;
+  user-select: none;
+}
+summary:hover { color: var(--amber-bright); }
+details[open] summary { color: var(--amber-bright); margin-bottom: 8px; }
+details > div {
+  padding: 10px 0 4px 0;
+  font-size: 15.5px;
+  color: var(--cream-soft);
+  max-width: 720px;
+}
+details p { margin-bottom: 12px; }
+
+.opener {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--cream-soft);
+  margin: 0 0 32px 0;
+  max-width: 720px;
+  line-height: 1.5;
+}
+
+.footer {
+  margin-top: 64px;
+  padding-top: 22px;
+  border-top: 1px solid var(--rule);
+  font-size: 11px;
+  color: var(--cream-deep);
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+@media (max-width: 720px) {
+  .container { padding: 56px 22px 72px; }
+  h1 { font-size: 42px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .card-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+}
+</style>
+</head>
+<body>
+<canvas id="starfield" width="1000" height="800"></canvas>
+
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Solar–Globular Cluster Encounter Analysis</div>
+    <h1>The Furniture of the Galaxy</h1>
+    <div class="sub">An invitation to ask whether the long swing of our orbit has been touching something old, and patient, this whole time.</div>
+  </header>
+
+  <p class="opener">
+    Look up tonight, away from the city lights. The pale river of the Milky Way is the <em>new</em> part of the galaxy — its disk, where stars are born and worlds are made. What hangs above that river, and below it, are the older things: globular clusters, dense balls of half a million ancient stars apiece, that watched the disk form around them.
+  </p>
+
+  <section class="intro">
+    <p>
+      There are about a hundred and fifty of them. Charles Messier put the brightest in his catalog in 1771. Their orbits do not live in the disk — they plunge through it on inclined paths, like swimmers crossing a swimming pool. Our Sun, on its own long orbit, oscillates through the same plane every thirty million years or so. Two or three times each galactic year, we pass near enough to feel one.
+    </p>
+    <p>
+      This tool asks one question, one cluster at a time. Reconstruct the orbits backward. When did the Sun come closest? How massive was the encounter? How long did it last? And does any of those moments sit near something that stirred on Earth — a sudden flowering, a quieting, an extinction or a recovery?
+    </p>
+    <p>
+      The answer is a list. Not a discovery. The list is where the looking starts.
+    </p>
+  </section>
+
+  <section>
+    <h2>The Catalog</h2>
+    <p class="lede">Thirteen well-known clusters, with the values you'd need for a first integration. Format per line: <code>name, RA(°), Dec(°), distance(kpc), pmRA*(mas/yr), pmDec(mas/yr), RV(km/s), mass(M☉), tidal_radius(pc)</code>. The last two are optional; mass enables the tidal-impulse ranking, tidal radius enables the geometry test. For serious work, replace these approximate Gaia-era values with the current Baumgardt &amp; Vasiliev table.</p>
+    <textarea id="clusters" rows="15">
+NGC 104,    6.024,   -72.081,   4.5,   5.252,  -2.551,  -17.5,  7.1e5, 56
+NGC 5139,   201.697, -47.480,   5.4,  -3.250,  -6.755,  232.7,  3.55e6, 64
+NGC 5272,   205.548,  28.377,  10.2,  -0.152,  -2.670, -147.6,  4.06e5, 113
+NGC 5904,   229.638,   2.083,   7.5,   4.073,  -9.881,   53.7,  3.72e5, 50
+NGC 6121,   245.897, -26.526,   2.2, -12.510, -19.000,   70.7,  9.85e4, 21
+NGC 6205,   250.422,  36.460,   7.1,  -3.149,  -2.574, -244.9,  4.50e5, 65
+NGC 6254,   254.288,  -4.100,   4.4,  -4.760,  -6.601,   75.2,  1.83e5, 33
+NGC 6341,   259.281,  43.136,   8.3,  -4.935,  -0.625, -120.5,  2.70e5, 60
+NGC 6656,   279.099, -23.905,   3.2,   9.851,  -5.617, -147.8,  4.10e5, 27
+NGC 6752,   287.717, -59.985,   4.0,  -3.180,  -4.030,  -26.0,  2.30e5, 56
+NGC 6809,   294.999, -30.965,   5.4,  -3.430,  -9.310,  174.8,  1.60e5, 49
+NGC 7078,   322.493,  12.167,  10.4,  -0.621,  -3.798, -107.0,  5.60e5, 62
+NGC 7089,   323.363,  -0.823,  11.5,   3.435,  -2.157,   -3.8,  6.21e5, 60
+    </textarea>
+  </section>
+
+  <section>
+    <h2>What Stirred on Earth</h2>
+    <p class="lede">Major shifts in Earth's biology and chemistry over the last quarter-billion years. <code>cull</code> for extinctions and anoxic crises; <code>bloom</code> for radiations, recoveries, climatic optima. Add any others you'd like to test against.</p>
+    <textarea id="events" rows="10">
+End-Permian Mass Extinction, 251.9, cull
+Carnian Pluvial Event,       233.0, bloom
+End-Triassic Extinction,     201.4, cull
+Toarcian Anoxic Event,       183.0, cull
+Cenomanian-Turonian Event,    93.9, cull
+K-Pg Mass Extinction,         66.0, cull
+PETM (Paleocene-Eocene),      56.0, bloom
+Eocene-Oligocene Boundary,    33.9, cull
+    </textarea>
+  </section>
+
+  <section>
+    <h2>Settings</h2>
+    <p class="lede">How far back to look, how finely, and how wide a window to count as a match.</p>
+    <div class="controls">
+      <div class="control">
+        <label>How far back (Ma)</label>
+        <input id="tMax" type="number" value="300" min="50" max="800" step="25">
+      </div>
+      <div class="control">
+        <label>Step size (Ma)</label>
+        <input id="dt" type="number" value="0.2" min="0.05" max="2" step="0.05">
+      </div>
+      <div class="control">
+        <label>Match window ± (Ma)</label>
+        <input id="tol" type="number" value="15" min="2" max="50" step="1">
+      </div>
+      <div class="control">
+        <label>&nbsp;</label>
+        <button id="run">Integrate</button>
+      </div>
+    </div>
+    <div id="status">Ready when you are.</div>
+  </section>
+
+  <section id="resultsSection" style="display:none">
+    <h2>What the Integration Found</h2>
+    <p class="lede">Each candidate below is a cluster whose closest historical approach fell within your matching window of a real Earth event. Reading them is not the same as believing them. They are the places to look first.</p>
+    <div id="candidates"></div>
+
+    <h2 style="margin-top: 48px;">All Encounters, Ranked</h2>
+    <p class="lede">Every cluster you supplied, sorted by tidal impulse to the outer Oort cloud at closest approach.</p>
+    <div class="table-wrap">
+      <table id="results">
+        <thead><tr>
+          <th>Cluster</th>
+          <th class="num">t<sub>min</sub> (Ma)</th>
+          <th class="num">b<sub>min</sub> (kpc)</th>
+          <th class="num">v<sub>rel</sub> (km/s)</th>
+          <th class="num">τ<sub>enc</sub> (Myr)</th>
+          <th class="num">ΔV<sub>Oort</sub> (m/s)</th>
+          <th>Matched Event</th>
+          <th class="num">ΔT (Ma)</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="note">
+      A reminder, in proportion: backward orbital integration over hundreds of millions of years is sensitive to the assumed Milky Way potential and to every digit in the cluster inputs. Anything inside roughly 1 kpc with a tidal kick of order 1 m/s or more is suggestive — nothing here is confirmation. Re-run with refined catalog values, alternative potentials, and ideally a Monte Carlo over the input uncertainties before drawing real conclusions.
+    </div>
+  </section>
+
+  <details>
+    <summary>The Physics, in Plain Words</summary>
+    <div>
+      <p><strong>The galaxy is treated as a smooth, time-independent gravitational field.</strong> Three components: a Hernquist bulge (M = 1.2×10¹⁰ M☉, scale 0.5 kpc), a Miyamoto-Nagai disk (M = 8×10¹⁰ M☉, a = 3.0 kpc, b = 0.3 kpc), and a logarithmic halo (v_h = 200 km/s, scale 12 kpc). Together they produce a circular velocity of about 228 km/s at the solar radius — close to the measured value.</p>
+      <p><strong>The Sun starts where it is now</strong> — Galactocentric position (−8.122, 0, 0.0208) kpc and velocity (11.1, 245.24, 7.25) km/s — and is integrated backward by classical fourth-order Runge-Kutta. Each cluster's observed phase space (right ascension, declination, distance, proper motion, radial velocity) is converted to Galactocentric Cartesian using the J2000 ICRS-to-Galactic rotation, then integrated alongside the Sun.</p>
+      <p><strong>The closest approach gives you four numbers.</strong> The minimum distance b<sub>min</sub>. The time it happened, t<sub>min</sub>. The relative velocity at that moment, v<sub>rel</sub>. The characteristic timescale τ<sub>enc</sub> = b<sub>min</sub>/v<sub>rel</sub> — how long the encounter "lasted" in the impulse-approximation sense.</p>
+      <p><strong>The tidal impulse</strong> ΔV<sub>Oort</sub> ≈ 2GM·a<sub>Oort</sub>/(b<sub>min</sub>²·v<sub>rel</sub>) gives the differential velocity kick imparted to a comet at the outer Oort cloud (a<sub>Oort</sub> ≈ 50 000 AU) relative to the Sun. This is the right physical observable to rank candidate encounters by, because it is what matters for shaking comets loose. The result is in metres per second; outer Oort orbital velocities are roughly 100 m/s, so even a few m/s is a meaningful kick.</p>
+      <p><strong>What this tool does not do.</strong> It assumes a smooth axisymmetric potential — no spiral arms, no bar, no time-varying perturbations. It uses point-mass clusters — no internal structure or extended tidal force from the cluster's own halo. It does not propagate input uncertainties; for a serious test, sample each cluster's RA/Dec/PM/RV/distance from its published Gaussian errors a thousand times and look at the spread.</p>
+      <p><strong>On performance.</strong> The integrator works entirely on flat <code>Float64Array</code> buffers with no per-step object allocation — closer to a C inner loop than to idiomatic JS. The full thirteen-cluster run, three hundred million years backward at a 0.2-Myr step, finishes in under a hundred milliseconds in any modern browser. Porting this to WebAssembly would buy maybe a factor of two; the choice not to is mostly about keeping the file self-contained and readable.</p>
+    </div>
+  </details>
+
+  <div class="footer">
+    <span>Everything runs locally · No data leaves this page</span>
+    <span>EB Garamond &amp; Cormorant Garamond · JetBrains Mono</span>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// =================================================================
+// STARFIELD — procedural background of faint, fixed stars
+// =================================================================
+(function drawStarfield() {
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+
+  function paint() {
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+    ctx.clearRect(0, 0, w, h);
+
+    // Deterministic stars (seeded PRNG so it doesn't flicker on resize)
+    let seed = 137;
+    const rng = () => {
+      seed = (seed * 9301 + 49297) % 233280;
+      return seed / 233280;
+    };
+
+    const nStars = Math.floor((w * h) / 4500);
+    for (let i = 0; i < nStars; i++) {
+      const x = rng() * w;
+      const y = rng() * h;
+      const r = rng();
+      const size = r < 0.93 ? 0.6 : r < 0.99 ? 1.1 : 1.7;
+      const alpha = r < 0.5 ? 0.15 + rng() * 0.15 : 0.3 + rng() * 0.45;
+      // Slight warm/cool variation
+      const tint = rng();
+      let color;
+      if (tint < 0.2) color = `rgba(255, 220, 180, ${alpha})`;        // warm
+      else if (tint < 0.85) color = `rgba(240, 240, 255, ${alpha})`;  // neutral
+      else color = `rgba(180, 200, 255, ${alpha})`;                   // cool
+
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.arc(x, y, size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  paint();
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(paint, 120);
+  });
+})();
+
+// =================================================================
+// PHYSICAL CONSTANTS — units throughout: kpc, Myr, M☉; km/s at edges
+// =================================================================
+
+const G = 4.4983e-12;              // kpc^3 / (M☉ · Myr^2)
+const G_KMS = 4.30091e-6;          // (km/s)^2 · kpc / M☉  — for impulse formulae
+const KMS_TO_KPC_MYR = 1.02271e-3;
+const KPC_MYR_TO_KMS = 977.79;
+const PM_K = 4.7405;               // (mas/yr) · kpc → km/s
+const AU_TO_KPC = 4.84814e-9;
+const A_OORT = 50000 * AU_TO_KPC;  // outer Oort cloud radius in kpc ≈ 2.424e-4
+
+// Sun's Galactocentric phase space
+const R0 = 8.122, Z0 = 0.0208;
+const V_SUN_KMS = [11.1, 245.24, 7.25];
+
+// Galactic potential parameters
+const M_BULGE = 1.2e10, A_BULGE = 0.5;
+const M_DISK  = 8.0e10, A_DISK = 3.0, B_DISK = 0.3;
+const V_HALO = 200.0 * KMS_TO_KPC_MYR;
+const V_HALO_SQ = V_HALO * V_HALO;
+const R_HALO_SQ = 12.0 * 12.0;
+
+// ICRS → Galactic J2000 rotation (row-major)
+const R_IG = new Float64Array([
+  -0.054875560, -0.873437090, -0.483835016,
+   0.494109428, -0.444829630,  0.746982244,
+  -0.867666149, -0.198076373,  0.455983776
+]);
+
+// =================================================================
+// CLUSTER DESCRIPTIONS — short Sagan/Tarter-voiced notes
+// =================================================================
+
+const CLUSTER_INFO = {
+  'NGC 104':  { common: '47 Tucanae',     desc: 'One of the two finest naked-eye clusters in the southern sky. A million stars packed into a sphere a hundred light-years across. Twelve billion years old.' },
+  'NGC 5139': { common: 'Omega Centauri', desc: 'The largest globular cluster in the Galaxy — and almost certainly the surviving core of a dwarf galaxy that the Milky Way swallowed long ago. Three and a half million stars.' },
+  'NGC 5272': { common: 'M3',             desc: 'Charles Messier\'s third entry, found from Paris in 1764. About half a million stars at thirty thousand light-years.' },
+  'NGC 5904': { common: 'M5',             desc: 'Exceptionally old, dated to around 13 billion years — older than nearly anything in the galactic disk. Visible to the naked eye under dark skies.' },
+  'NGC 6121': { common: 'M4',             desc: 'The closest globular cluster to Earth, only seven thousand light-years away. Held the first planet ever confirmed in a globular cluster — a pulsar planet, found in 2003.' },
+  'NGC 6205': { common: 'M13 · Hercules', desc: 'Edmund Halley first noted it in 1714. Twenty-five thousand light-years from us. In 1974, humanity transmitted its first deliberate radio message to the stars in this direction — the Arecibo Message.' },
+  'NGC 6254': { common: 'M10',            desc: 'A compact older cluster in Ophiuchus, about fourteen thousand light-years away.' },
+  'NGC 6341': { common: 'M92',            desc: 'Possibly the oldest object in the Milky Way — at least 13.2 billion years, formed when the universe was less than a tenth its current age.' },
+  'NGC 6656': { common: 'M22',            desc: 'One of the few globular clusters known to harbor a planetary nebula — a star\'s death glimpsed inside something ancient. Naked-eye visible from southern latitudes.' },
+  'NGC 6752': { common: '—',              desc: 'Among the brightest globular clusters of the southern sky, in the constellation Pavo. Hosts a triple-pulsar system at its core.' },
+  'NGC 6809': { common: 'M55',            desc: 'A loose, low-concentration cluster in Sagittarius — easy to resolve into individual stars in a small telescope.' },
+  'NGC 7078': { common: 'M15',            desc: 'A core-collapsed cluster with the densest center of any in our galaxy. Possibly hides an intermediate-mass black hole.' },
+  'NGC 7089': { common: 'M2',             desc: 'Discovered by Maraldi in 1746 while observing a comet. Half a million stars at fifty-five thousand light-years.' }
+};
+
+// =================================================================
+// COORDINATE TRANSFORM
+// =================================================================
+
+function mat3mul(M, vIn, vOut) {
+  vOut[0] = M[0]*vIn[0] + M[1]*vIn[1] + M[2]*vIn[2];
+  vOut[1] = M[3]*vIn[0] + M[4]*vIn[1] + M[5]*vIn[2];
+  vOut[2] = M[6]*vIn[0] + M[7]*vIn[1] + M[8]*vIn[2];
+}
+
+const _vIcrs = new Float64Array(3);
+const _vGal  = new Float64Array(3);
+
+function eqToGC(ra, dec, dist, pmra, pmdec, rv, out) {
+  const ra_r  = ra  * Math.PI / 180;
+  const dec_r = dec * Math.PI / 180;
+  const sa = Math.sin(ra_r), ca = Math.cos(ra_r);
+  const sd = Math.sin(dec_r), cd = Math.cos(dec_r);
+
+  // Heliocentric ICRS position
+  _vIcrs[0] = dist*cd*ca; _vIcrs[1] = dist*cd*sa; _vIcrs[2] = dist*sd;
+  mat3mul(R_IG, _vIcrs, _vGal);
+
+  // Galactocentric position (Sun at (−R0, 0, +Z0))
+  out[0] = _vGal[0] - R0;
+  out[1] = _vGal[1];
+  out[2] = _vGal[2] + Z0;
+
+  // Heliocentric ICRS velocity
+  const vra  = pmra  * dist * PM_K;
+  const vdec = pmdec * dist * PM_K;
+  _vIcrs[0] = rv*cd*ca + vra*(-sa) + vdec*(-sd*ca);
+  _vIcrs[1] = rv*cd*sa + vra*( ca) + vdec*(-sd*sa);
+  _vIcrs[2] = rv*sd                + vdec*( cd);
+  mat3mul(R_IG, _vIcrs, _vGal);
+
+  // Galactocentric velocity in kpc/Myr
+  out[3] = (_vGal[0] + V_SUN_KMS[0]) * KMS_TO_KPC_MYR;
+  out[4] = (_vGal[1] + V_SUN_KMS[1]) * KMS_TO_KPC_MYR;
+  out[5] = (_vGal[2] + V_SUN_KMS[2]) * KMS_TO_KPC_MYR;
+}
+
+// =================================================================
+// POTENTIAL — acceleration at (x,y,z), written into out[0..2]
+// =================================================================
+
+function accel(x, y, z, out) {
+  const R2 = x*x + y*y;
+  const r2 = R2 + z*z;
+  const r  = Math.sqrt(r2);
+
+  // Hernquist bulge
+  const rb = r + A_BULGE;
+  const bF = -G * M_BULGE / (r * rb * rb);
+
+  // Miyamoto-Nagai disk
+  const zb = Math.sqrt(z*z + B_DISK*B_DISK);
+  const azb = A_DISK + zb;
+  const D2 = R2 + azb*azb;
+  const D3 = D2 * Math.sqrt(D2);
+  const dF = -G * M_DISK / D3;
+  const dFz_extra = dF * azb / zb;
+
+  // Logarithmic halo
+  const hd  = r2 + R_HALO_SQ;
+  const hF  = -V_HALO_SQ / hd;
+
+  out[0] = (bF + dF + hF) * x;
+  out[1] = (bF + dF + hF) * y;
+  out[2] = (bF + hF) * z + dFz_extra * z;
+}
+
+// =================================================================
+// RK4 — in-place, no allocation. State is [x,y,z,vx,vy,vz]; we use
+// separate Float64Array buffers for k1..k4 and scratch.
+// =================================================================
+
+const _k1 = new Float64Array(6);
+const _k2 = new Float64Array(6);
+const _k3 = new Float64Array(6);
+const _k4 = new Float64Array(6);
+const _tmp = new Float64Array(6);
+const _acc = new Float64Array(3);
+
+function derivs(s, k) {
+  k[0] = s[3]; k[1] = s[4]; k[2] = s[5];
+  accel(s[0], s[1], s[2], _acc);
+  k[3] = _acc[0]; k[4] = _acc[1]; k[5] = _acc[2];
+}
+
+function rk4Step(s, dt) {
+  derivs(s, _k1);
+  for (let i = 0; i < 6; i++) _tmp[i] = s[i] + 0.5*dt*_k1[i];
+  derivs(_tmp, _k2);
+  for (let i = 0; i < 6; i++) _tmp[i] = s[i] + 0.5*dt*_k2[i];
+  derivs(_tmp, _k3);
+  for (let i = 0; i < 6; i++) _tmp[i] = s[i] + dt*_k3[i];
+  derivs(_tmp, _k4);
+  for (let i = 0; i < 6; i++) {
+    s[i] += (dt/6) * (_k1[i] + 2*_k2[i] + 2*_k3[i] + _k4[i]);
+  }
+}
+
+// =================================================================
+// FULL BACKWARD INTEGRATION
+// Returns the full distance time series plus the analysis of the
+// closest approach (b_min, t_min, v_rel, encounter timescale).
+// =================================================================
+
+const _sunState = new Float64Array(6);
+const _clsState = new Float64Array(6);
+
+function integrate(sun0, cls0, tMax, dt) {
+  const step = -dt;
+  const n = Math.ceil(tMax / dt);
+  const dist = new Float64Array(n + 1);
+  const times = new Float64Array(n + 1);
+
+  for (let i = 0; i < 6; i++) {
+    _sunState[i] = sun0[i];
+    _clsState[i] = cls0[i];
+  }
+
+  let bMin = Infinity, tMin = 0, iMin = 0;
+  let vRelAtMin = 0;  // in kpc/Myr at the closest-approach step
+
+  for (let i = 0; i <= n; i++) {
+    const dx = _clsState[0] - _sunState[0];
+    const dy = _clsState[1] - _sunState[1];
+    const dz = _clsState[2] - _sunState[2];
+    const d  = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    const t  = i * dt;
+    dist[i]  = d;
+    times[i] = t;
+
+    if (d < bMin) {
+      bMin = d;
+      tMin = t;
+      iMin = i;
+      const dvx = _clsState[3] - _sunState[3];
+      const dvy = _clsState[4] - _sunState[4];
+      const dvz = _clsState[5] - _sunState[5];
+      vRelAtMin = Math.sqrt(dvx*dvx + dvy*dvy + dvz*dvz);
+    }
+
+    if (i < n) {
+      rk4Step(_sunState, step);
+      rk4Step(_clsState, step);
+    }
+  }
+
+  const vRelKms = vRelAtMin * KPC_MYR_TO_KMS;
+  const tauEnc = vRelKms > 0 ? bMin / (vRelKms * KMS_TO_KPC_MYR) : 0;  // Myr
+
+  return { dist, times, n, bMin, tMin, iMin, vRelKms, tauEnc };
+}
+
+// =================================================================
+// PHYSICS — tidal impulse to outer Oort cloud comet
+// ΔV ≈ 2 G M a_Oort / (b² v_rel)   in km/s, returned in m/s
+// =================================================================
+
+function tidalImpulse(M_msun, b_kpc, v_kms) {
+  if (M_msun <= 0 || b_kpc <= 0 || v_kms <= 0) return 0;
+  const dv_kms = 2 * G_KMS * M_msun * A_OORT / (b_kpc * b_kpc * v_kms);
+  return dv_kms * 1000;  // m/s
+}
+
+// =================================================================
+// PARSERS
+// =================================================================
+
+function parseClusters(text) {
+  const out = [];
+  for (const raw of text.split('\n')) {
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) continue;
+    const parts = line.split(',').map(s => s.trim());
+    if (parts.length < 7) continue;
+    const nums = parts.slice(1, 9).map(Number);
+    if (nums.slice(0, 6).some(n => Number.isNaN(n))) continue;
+    out.push({
+      name:    parts[0],
+      ra:      nums[0],
+      dec:     nums[1],
+      d:       nums[2],
+      pmra:    nums[3],
+      pmdec:   nums[4],
+      rv:      nums[5],
+      mass:    Number.isNaN(nums[6]) ? null : nums[6],
+      rtidal:  Number.isNaN(nums[7]) ? null : nums[7]  // pc
+    });
+  }
+  return out;
+}
+
+function parseEvents(text) {
+  const out = [];
+  for (const raw of text.split('\n')) {
+    const line = raw.trim();
+    if (!line || line.startsWith('#')) continue;
+    const parts = line.split(',').map(s => s.trim());
+    if (parts.length < 2) continue;
+    const age = +parts[1];
+    if (Number.isNaN(age)) continue;
+    out.push({ name: parts[0], age, type: (parts[2] || 'event').toLowerCase() });
+  }
+  return out;
+}
+
+// =================================================================
+// MINI DISTANCE-VS-TIME CHART (SVG)
+// =================================================================
+
+function buildChart(dist, times, n, tMin, bMin, eventAge, tMax, tolerance) {
+  const W = 520, H = 130;
+  const padL = 44, padR = 12, padT = 14, padB = 28;
+  const plotW = W - padL - padR;
+  const plotH = H - padT - padB;
+
+  // Vertical axis: distance, 0 to a sensible max
+  let dMax = 0;
+  for (let i = 0; i <= n; i++) if (dist[i] > dMax) dMax = dist[i];
+  dMax = Math.max(dMax * 1.05, bMin * 4);
+
+  const xOf = t => padL + (t / tMax) * plotW;
+  const yOf = d => padT + plotH - (d / dMax) * plotH;
+
+  // Build the distance polyline
+  let pts = '';
+  // Subsample to ~260 points for SVG size
+  const stride = Math.max(1, Math.ceil((n + 1) / 260));
+  for (let i = 0; i <= n; i += stride) {
+    pts += `${xOf(times[i]).toFixed(1)},${yOf(dist[i]).toFixed(1)} `;
+  }
+
+  // Y axis ticks
+  const yTicks = [0, dMax/2, dMax].map(d =>
+    `<line x1="${padL}" y1="${yOf(d)}" x2="${padL - 4}" y2="${yOf(d)}" stroke="#3a4d70" stroke-width="0.7"/>
+     <text x="${padL - 7}" y="${yOf(d) + 3}" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#968b6d">${d.toFixed(1)}</text>`
+  ).join('');
+
+  // X axis ticks
+  const xTickValues = [0, tMax/4, tMax/2, tMax*3/4, tMax];
+  const xTicks = xTickValues.map(t =>
+    `<line x1="${xOf(t)}" y1="${padT + plotH}" x2="${xOf(t)}" y2="${padT + plotH + 4}" stroke="#3a4d70" stroke-width="0.7"/>
+     <text x="${xOf(t)}" y="${padT + plotH + 16}" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#968b6d">${Math.round(t)}</text>`
+  ).join('');
+
+  // Event window shading
+  let eventShade = '';
+  let eventLine = '';
+  if (eventAge != null) {
+    const x0 = xOf(Math.max(0, eventAge - tolerance));
+    const x1 = xOf(Math.min(tMax, eventAge + tolerance));
+    eventShade = `<rect x="${x0}" y="${padT}" width="${x1-x0}" height="${plotH}" fill="#d99a3a" fill-opacity="0.08"/>`;
+    eventLine  = `<line x1="${xOf(eventAge)}" y1="${padT}" x2="${xOf(eventAge)}" y2="${padT + plotH}"
+                   stroke="#f5c25b" stroke-width="1" stroke-dasharray="3,3" opacity="0.8"/>`;
+  }
+
+  return `
+<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet" style="width:100%; height:auto; max-height:160px;">
+  ${eventShade}
+  <line x1="${padL}" y1="${padT}"         x2="${padL}" y2="${padT + plotH}" stroke="#3a4d70" stroke-width="0.7"/>
+  <line x1="${padL}" y1="${padT + plotH}" x2="${W - padR}" y2="${padT + plotH}" stroke="#3a4d70" stroke-width="0.7"/>
+  ${yTicks}
+  ${xTicks}
+  <polyline points="${pts}" fill="none" stroke="#cfc4a8" stroke-width="1.4"/>
+  ${eventLine}
+  <circle cx="${xOf(tMin)}" cy="${yOf(bMin)}" r="3.2" fill="#f5c25b" stroke="#060914" stroke-width="1"/>
+  <text x="${padL}" y="${H - 6}" font-family="JetBrains Mono" font-size="9" fill="#66614a">Ma before present</text>
+  <text x="${W - padR}" y="${padT - 3}" text-anchor="end" font-family="JetBrains Mono" font-size="9" fill="#66614a">distance (kpc)</text>
+</svg>`;
+}
+
+// =================================================================
+// DISPLAY
+// =================================================================
+
+function fmtMass(m) {
+  if (!m || m <= 0) return '—';
+  if (m >= 1e6) return (m / 1e6).toFixed(2) + ' × 10⁶ M☉';
+  return (m / 1e5).toFixed(2) + ' × 10⁵ M☉';
+}
+
+function fmtTime(t) { return t.toFixed(1) + ' Ma'; }
+function fmtKpc(d) { return d.toFixed(2) + ' kpc'; }
+function fmtKms(v) { return v.toFixed(0) + ' km/s'; }
+function fmtMyr(t) { return t.toFixed(2) + ' Myr'; }
+function fmtImp(v) {
+  if (v === 0) return '—';
+  if (v < 0.01) return v.toExponential(1) + ' m/s';
+  if (v < 1) return v.toFixed(3) + ' m/s';
+  return v.toFixed(2) + ' m/s';
+}
+
+function buildCard(row, tMax, tolerance) {
+  const info = CLUSTER_INFO[row.cluster.name] || { common: '—', desc: '' };
+  const evAge = row.match ? row.match.age : null;
+
+  const closeRel = row.cluster.rtidal != null
+    ? ` (${(row.bMin * 1000 / row.cluster.rtidal).toFixed(1)} × r<sub>tidal</sub>)`
+    : '';
+
+  return `
+<div class="card">
+  <div class="card-head">
+    <div class="card-name">
+      <span class="ngc">${row.cluster.name}</span>
+      ${info.common && info.common !== '—' ? `&nbsp;·&nbsp;<span class="common">${info.common}</span>` : ''}
+    </div>
+    <div class="card-impulse">tidal kick &nbsp;${fmtImp(row.dV)}</div>
+  </div>
+  <div class="card-desc">${info.desc}</div>
+
+  <div class="card-grid">
+    <div>
+      <div class="label">Closest approach</div>
+      <div class="value hi">${fmtTime(row.tMin)} &nbsp;·&nbsp; ${fmtKpc(row.bMin)}${closeRel}</div>
+      <div class="label">Encounter kinematics</div>
+      <div class="value">v<sub>rel</sub> = ${fmtKms(row.vRel)} &nbsp;·&nbsp; τ<sub>enc</sub> = ${fmtMyr(row.tauEnc)}</div>
+      <div class="label">Cluster mass</div>
+      <div class="value">${fmtMass(row.cluster.mass)}</div>
+    </div>
+    <div>
+      ${row.match ? `
+        <div class="label">Matched event</div>
+        <div class="value"><span class="ev">${row.match.name}</span><span class="ev-type">[${row.match.type}]</span></div>
+        <div class="label">At age</div>
+        <div class="value">${fmtTime(row.match.age)} &nbsp;·&nbsp; ΔT = ${row.match.dT.toFixed(1)} Ma</div>
+      ` : `
+        <div class="label">Matched event</div>
+        <div class="value" style="color:var(--cream-dim);">none within window</div>
+      `}
+      <div class="label">Today's distance</div>
+      <div class="value">${fmtKpc(row.dCur)}</div>
+    </div>
+  </div>
+  <div class="card-chart">
+    ${buildChart(row.dist, row.times, row.n, row.tMin, row.bMin, evAge, tMax, tolerance)}
+  </div>
+</div>`;
+}
+
+// =================================================================
+// MAIN
+// =================================================================
+
+const $ = id => document.getElementById(id);
+function setStatus(msg, thinking = false) {
+  const s = $('status');
+  s.textContent = msg;
+  s.classList.toggle('thinking', thinking);
+}
+
+$('run').addEventListener('click', () => {
+  const btn = $('run');
+  btn.disabled = true;
+
+  setStatus('Reading the catalog…', true);
+
+  const clusters = parseClusters($('clusters').value);
+  const events   = parseEvents($('events').value);
+  const tMax = +$('tMax').value;
+  const dt   = +$('dt').value;
+  const tol  = +$('tol').value;
+
+  if (clusters.length === 0) { setStatus('No cluster data parsed.'); btn.disabled = false; return; }
+  if (events.length === 0)   { setStatus('No event data parsed.');   btn.disabled = false; return; }
+
+  setStatus(`Integrating ${clusters.length} cluster orbits ${tMax} Ma backward at ${dt}-Myr resolution…`, true);
+
+  // Sun's Galactocentric state in kpc, kpc/Myr
+  const sun0 = new Float64Array([
+    -R0, 0, Z0,
+    V_SUN_KMS[0] * KMS_TO_KPC_MYR,
+    V_SUN_KMS[1] * KMS_TO_KPC_MYR,
+    V_SUN_KMS[2] * KMS_TO_KPC_MYR
+  ]);
+
+  // Defer to next tick so the spinner paints
+  setTimeout(() => {
+    const t0 = performance.now();
+    const rows = [];
+    const gcBuf = new Float64Array(6);
+
+    for (const c of clusters) {
+      eqToGC(c.ra, c.dec, c.d, c.pmra, c.pmdec, c.rv, gcBuf);
+      const cls0 = new Float64Array(gcBuf);
+
+      const dx0 = gcBuf[0] - sun0[0], dy0 = gcBuf[1] - sun0[1], dz0 = gcBuf[2] - sun0[2];
+      const dCur = Math.sqrt(dx0*dx0 + dy0*dy0 + dz0*dz0);
+
+      const r = integrate(sun0, cls0, tMax, dt);
+
+      // Match best event within tolerance
+      let best = null;
+      for (const e of events) {
+        const dT = Math.abs(e.age - r.tMin);
+        if (dT <= tol && (!best || dT < best.dT)) {
+          best = { name: e.name, type: e.type, age: e.age, dT };
+        }
+      }
+
+      const dV = c.mass != null ? tidalImpulse(c.mass, r.bMin, r.vRelKms) : 0;
+
+      rows.push({
+        cluster: c,
+        dist:   r.dist,
+        times:  r.times,
+        n:      r.n,
+        tMin:   r.tMin,
+        bMin:   r.bMin,
+        vRel:   r.vRelKms,
+        tauEnc: r.tauEnc,
+        dCur,
+        dV,
+        match:  best
+      });
+    }
+
+    // --- Top candidates: matched, sorted by tidal impulse (or by bMin if no mass) ---
+    const candidates = rows.filter(r => r.match)
+      .sort((a, b) => (b.dV - a.dV) || (a.bMin - b.bMin));
+
+    const candHTML = candidates.length === 0
+      ? `<div class="no-matches">No cluster's closest approach landed within ±${tol} Ma of an event you supplied. Try widening the match window, lengthening the integration, or testing a different list of events. The Sun has many more swings to make.</div>`
+      : candidates.map(r => buildCard(r, tMax, tol)).join('');
+
+    $('candidates').innerHTML = candHTML;
+
+    // --- Full ranked table: all clusters, sorted by tidal impulse ---
+    rows.sort((a, b) => (b.dV - a.dV) || (a.bMin - b.bMin));
+
+    const tbody = document.querySelector('#results tbody');
+    tbody.innerHTML = '';
+    for (const r of rows) {
+      const tr = document.createElement('tr');
+      if (r.match) tr.className = 'hit';
+      const info = CLUSTER_INFO[r.cluster.name];
+      const display = info && info.common && info.common !== '—'
+        ? `${r.cluster.name} <span style="color:var(--cream-dim); font-style:italic;">${info.common}</span>`
+        : r.cluster.name;
+      const evCell = r.match
+        ? `${r.match.name} <span style="color:var(--cream-dim); font-style:italic;">[${r.match.type}]</span>`
+        : '—';
+      tr.innerHTML = `
+        <td>${display}</td>
+        <td class="num">${r.tMin.toFixed(1)}</td>
+        <td class="num">${r.bMin.toFixed(2)}</td>
+        <td class="num">${r.vRel.toFixed(0)}</td>
+        <td class="num">${r.tauEnc.toFixed(2)}</td>
+        <td class="num">${r.dV > 0 ? r.dV.toFixed(3) : '—'}</td>
+        <td>${evCell}</td>
+        <td class="num">${r.match ? r.match.dT.toFixed(1) : '—'}</td>
+      `;
+      tbody.appendChild(tr);
+    }
+
+    $('resultsSection').style.display = '';
+    const elapsed = ((performance.now() - t0) / 1000).toFixed(2);
+    setStatus(`Done in ${elapsed}s. ${rows.length} clusters integrated · ${candidates.length} matched a known event within ±${tol} Ma.`);
+    btn.disabled = false;
+  }, 60);
+});
+
+// =================================================================
+// LOAD CSV DEFAULTS — on page load, try to fetch data/clusters.csv and
+// data/events.csv. If they load, replace the textarea contents. If not
+// (e.g. opened directly via file:// where fetch is blocked), the
+// hardcoded textarea defaults stay in place and the tool still works.
+// =================================================================
+
+(async function loadDefaultsFromCSV() {
+  async function tryLoad(url, elementId) {
+    try {
+      const resp = await fetch(url, { cache: 'no-store' });
+      if (!resp.ok) return false;
+      const text = await resp.text();
+      // Sanity: must have at least a few lines that look like data
+      if (text.split('\n').filter(l => l.trim() && !l.trim().startsWith('#')).length < 1) {
+        return false;
+      }
+      document.getElementById(elementId).value = text.trimEnd();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  const [clustersLoaded, eventsLoaded] = await Promise.all([
+    tryLoad('data/clusters.csv', 'clusters'),
+    tryLoad('data/events.csv',   'events'),
+  ]);
+
+  // Quietly indicate when external data was used
+  const s = document.getElementById('status');
+  if (s && s.textContent === 'Ready when you are.' && (clustersLoaded || eventsLoaded)) {
+    const parts = [];
+    if (clustersLoaded) parts.push('cluster catalog');
+    if (eventsLoaded)   parts.push('event list');
+    s.textContent = `Loaded ${parts.join(' and ')} from data/. Ready when you are.`;
+  }
+})();
+</script>
+</body>
+</html>
