@@ -1,11 +1,48 @@
 # name, age(Ma), type
 # Major Phanerozoic biological and geochemical events.
 # Type: cull (extinction, anoxic crisis) or bloom (radiation, recovery, climatic optimum)
-End-Permian Mass Extinction, 251.9, cull
-Carnian Pluvial Event,       233.0, bloom
-End-Triassic Extinction,     201.4, cull
-Toarcian Anoxic Event,       183.0, cull
-Cenomanian-Turonian Event,    93.9, cull
-K-Pg Mass Extinction,         66.0, cull
-PETM (Paleocene-Eocene),      56.0, bloom
-Eocene-Oligocene Boundary,    33.9, cull
+Great Oxidation Event,                 2400.0, cull
+Sturtian Snowball Earth,                717.0, cull
+Marinoan Deglaciation/Ediacaran Recovery,635.0, bloom
+Avalon Explosion,                       575.0, bloom
+End-Ediacaran Extinction,               541.0, cull
+Cambrian Explosion,                     538.8, bloom
+Late Cambrian Extinction,               485.0, cull
+Great Ordovician Biodiversification,    470.0, bloom
+End-Ordovician Mass Extinction,         443.8, cull
+Ireviken Event,                         433.0, cull
+Mulde Event,                            428.0, cull
+Lau Event,                              420.0, cull
+Devonian Forest Expansion,              385.0, bloom
+Kellwasser Event,                       372.0, cull
+Hangenberg Event,                       358.9, cull
+Carboniferous Coal-Forest Expansion,    320.0, bloom
+Carboniferous Rainforest Collapse,      305.0, cull
+Early Permian Synapsid Expansion,       290.0, bloom
+Olson's Extinction,                     273.0, cull
+Capitanian Extinction,                  260.0, cull
+End-Permian Mass Extinction,            251.9, cull
+Early Triassic Recovery,                249.0, bloom
+Smithian-Spathian Crisis,               247.0, cull
+Middle Triassic Recovery,               242.0, bloom
+Carnian Pluvial Event,                  233.0, bloom
+End-Triassic Extinction,                201.4, cull
+Early Jurassic Dinosaur Radiation,      200.0, bloom
+Toarcian Anoxic Event,                  183.0, cull
+Mesozoic Marine Revolution,             170.0, bloom
+Selli Event / OAE1a,                    120.5, cull
+Cretaceous Terrestrial Revolution,      110.0, bloom
+Cenomanian-Turonian Event / OAE2,        93.9, cull
+K-Pg Mass Extinction,                    66.0, cull
+Paleocene Recovery Radiation,            62.0, bloom
+PETM (Paleocene-Eocene),                 56.0, bloom
+Early Eocene Climatic Optimum,           52.0, bloom
+Azolla Event,                            49.0, bloom
+Eocene-Oligocene Boundary,               33.9, cull
+Mid-Miocene Climatic Optimum,            16.0, bloom
+Middle Miocene Climate Transition,       14.0, cull
+Late Miocene C4 Grassland Expansion,      7.0, bloom
+Messinian Salinity Crisis,                5.96, cull
+Northern Hemisphere Glaciation,           2.58, cull
+Late Quaternary Megafaunal Extinctions,   0.05, cull
+Anthropocene Biodiversity Crisis,         0.0002, cull
