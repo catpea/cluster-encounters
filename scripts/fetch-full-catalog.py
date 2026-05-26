@@ -3,17 +3,27 @@
 fetch-full-catalog.py
 =====================
 
-Downloads the Baumgardt & Vasiliev (2021) Milky Way globular cluster catalog
-and converts it to the CSV format used by The Furniture of the Galaxy tool.
+Downloads the Baumgardt & Vasiliev Milky Way globular cluster catalog and
+converts it to the CSV format used by The Furniture of the Galaxy tool.
 
 Source pages:
     https://people.smp.uq.edu.au/HolgerBaumgardt/globular/
 
-The catalog has two relevant files:
-    orbits_table.txt    — 6D phase space (RA, Dec, distance, PMs, RV)
-    parameter.txt       — structural parameters including mass and tidal radius
+The catalog is split across two files:
+    orbits_table.txt     — 6D phase space (RA, Dec, distance, PMs, RV)
+    combined_table.txt   — structural parameters including mass and tidal radius
 
-This script downloads both, joins them on cluster name, and emits a CSV
+The structural-parameter file was previously named parameter.txt; as of 2026
+Baumgardt's site uses combined_table.txt, which folds positional and structural
+data into one file. We continue to read the kinematic data from orbits_table.txt
+and only the mass + tidal radius from combined_table.txt, joined on cluster name.
+
+Cluster names in both files use underscores (e.g. "NGC_104"). The script
+normalizes them to space-separated form ("NGC 104") for consistency with the
+bundled data/clusters.csv and with the per-cluster description lookup in
+index.html.
+
+This script downloads both files, joins them on cluster name, and emits a CSV
 matching the format read by index.html and data/clusters.csv.
 
 Requires:
@@ -44,21 +54,23 @@ import os
 import re
 import urllib.request
 import urllib.error
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 ORBITS_URL = "https://people.smp.uq.edu.au/HolgerBaumgardt/globular/orbits_table.txt"
-PARAMS_URL = "https://people.smp.uq.edu.au/HolgerBaumgardt/globular/parameter.txt"
+PARAMS_URL = "https://people.smp.uq.edu.au/HolgerBaumgardt/globular/combined_table.txt"
 
 # -----------------------------------------------------------------------------
-# Column guesses for the orbits file.
+# Column guesses.
 #
-# Baumgardt's orbits_table.txt is whitespace-delimited. As of writing, columns
-# are roughly: Cluster_Name RA DEC R_Sun [error] R_Gal [error] PM_RA [error]
-# PM_Dec [error] RV [error] ...
+# Baumgardt's tables are whitespace-delimited with a header line that starts
+# with '#'. We identify columns by header keywords rather than fixed positions,
+# which is robust to layout shifts. The FALLBACK positions below are used
+# only when header detection fails.
 #
-# We identify columns by header keywords rather than fixed positions, which
-# is more robust to layout shifts. If header detection fails, the FALLBACK
-# positions below are used.
+# As of writing, combined_table.txt has 37 columns starting:
+#   Cluster RA DEC R_Sun DRSun R_GC DRGC N_RV N_PM Mass DM V Delta_V
+#   M/L_V DM/L rc rh,l rh,m rt rho_c rho_h,m ...
+# We only extract: Cluster (name), Mass, rt (tidal radius).
 # -----------------------------------------------------------------------------
 
 ORBITS_HEADER_KEYS = {
@@ -71,7 +83,6 @@ ORBITS_HEADER_KEYS = {
     "rv":    ["<RV>", "RV", "Vlos", "Vr"],
 }
 
-# Used only if header parsing fails entirely.
 ORBITS_FALLBACK_COLS = {
     "name": 0, "ra": 1, "dec": 2, "dist": 3, "pmra": 5, "pmdec": 7, "rv": 9,
 }
@@ -79,11 +90,13 @@ ORBITS_FALLBACK_COLS = {
 PARAMS_HEADER_KEYS = {
     "name":   ["Cluster", "Name", "ID"],
     "mass":   ["Mass", "M_total", "Mtot"],
-    "rtidal": ["rt", "r_t", "rtidal", "r_tidal"],   # tidal radius (pc)
+    "rtidal": ["rt", "r_t", "rtidal", "r_tidal"],
 }
 
+# Positions in combined_table.txt data rows (no leading '#'):
+#   0: Cluster, 9: Mass, 18: rt
 PARAMS_FALLBACK_COLS = {
-    "name": 0, "mass": 1, "rtidal": 2,
+    "name": 0, "mass": 9, "rtidal": 18,
 }
 
 
@@ -94,7 +107,8 @@ PARAMS_FALLBACK_COLS = {
 def fetch(url: str, timeout: int = 60) -> str:
     """Download a URL with a polite User-Agent."""
     req = urllib.request.Request(
-        url, headers={"User-Agent": "furniture-of-the-galaxy/1.0 (+https://github.com/catpea/cluster-encounters)"}
+        url,
+        headers={"User-Agent": "furniture-of-the-galaxy/1.1 (+https://github.com/catpea/cluster-encounters)"},
     )
     sys.stderr.write(f"Fetching {url} ...\n")
     with urllib.request.urlopen(req, timeout=timeout) as resp:
@@ -106,6 +120,9 @@ def fetch(url: str, timeout: int = 60) -> str:
 # -----------------------------------------------------------------------------
 # Parsing — header-driven, with fallback to fixed positions
 # -----------------------------------------------------------------------------
+
+_HEADER_HASH_RE = re.compile(r"^\s*#+\s*")
+
 
 def find_header_line(lines: List[str]) -> Optional[int]:
     """Locate the header row (the line listing column names)."""
@@ -147,7 +164,13 @@ def parse_table(text: str, keyspec: Dict[str, List[str]], fallback: Dict[str, in
     header_idx = find_header_line(lines)
 
     if header_idx is not None:
-        header = lines[header_idx].split()
+        # Strip the leading '#' (and any whitespace around it) so that header
+        # column indices align with data row indices. Without this, the '#'
+        # would occupy index 0 in the header but not in data rows, throwing
+        # every column off by one.
+        raw_header = lines[header_idx]
+        header_line = _HEADER_HASH_RE.sub("", raw_header)
+        header = header_line.split()
         cols = resolve_columns(header, keyspec)
         sys.stderr.write(f"[{label}] Detected header at line {header_idx + 1}: " +
                          ", ".join(f"{k}={v}" for k, v in cols.items()) + "\n")
@@ -168,15 +191,10 @@ def parse_table(text: str, keyspec: Dict[str, List[str]], fallback: Dict[str, in
         line = raw.strip()
         if not line or line.startswith("#") or line.startswith("-") or line.startswith("="):
             continue
-        # Cluster names can contain a space (e.g. "NGC 104"). We handle that by
-        # looking for the pattern \w+\s+\d+ at the start.
-        m = re.match(r"^([A-Za-z]+\s+\d+\w*)\s+(.*)$", line)
-        if m:
-            name = m.group(1).strip()
-            rest_tokens = m.group(2).split()
-            tokens = [name] + rest_tokens
-        else:
-            tokens = line.split()
+        # Cluster names in Baumgardt tables use underscores (NGC_104) or
+        # hyphens (2MASS-GC01); they do not contain spaces. Plain whitespace
+        # split is correct.
+        tokens = line.split()
         if len(tokens) < 3:
             continue
 
@@ -206,6 +224,11 @@ def coerce_float(s: str) -> Optional[float]:
         return float(s.replace("D", "E").replace("d", "e"))
     except ValueError:
         return None
+
+
+def normalize_name(raw: str) -> str:
+    """Convert Baumgardt-style 'NGC_104' to display form 'NGC 104'."""
+    return raw.strip().replace("_", " ")
 
 
 def sanity_check_orbit(row: Dict[str, str]) -> bool:
@@ -238,24 +261,24 @@ def main() -> int:
         params_text = fetch(PARAMS_URL)
     except urllib.error.URLError as e:
         sys.stderr.write(f"ERROR: could not reach the Baumgardt catalog server: {e}\n")
-        sys.stderr.write("       Try again later, or save the files manually and use --from-files.\n")
+        sys.stderr.write("       Try again later, or save the files manually and adapt the script.\n")
         return 2
 
     if args.save_raw:
         os.makedirs(args.save_raw, exist_ok=True)
         with open(os.path.join(args.save_raw, "orbits_table.txt"), "w") as f:
             f.write(orbits_text)
-        with open(os.path.join(args.save_raw, "parameter.txt"), "w") as f:
+        with open(os.path.join(args.save_raw, "combined_table.txt"), "w") as f:
             f.write(params_text)
         sys.stderr.write(f"Raw files saved to {args.save_raw}/\n")
 
     orbits = parse_table(orbits_text, ORBITS_HEADER_KEYS, ORBITS_FALLBACK_COLS, "orbits")
     params = parse_table(params_text, PARAMS_HEADER_KEYS, PARAMS_FALLBACK_COLS, "params")
 
-    # Build a lookup of mass / tidal radius by cluster name
+    # Build a lookup of mass / tidal radius by normalized cluster name
     params_lookup: Dict[str, Dict[str, str]] = {}
     for p in params:
-        name = p.get("name", "").strip()
+        name = normalize_name(p.get("name", ""))
         if name:
             params_lookup[name] = p
 
@@ -271,7 +294,7 @@ def main() -> int:
             if not sanity_check_orbit(row):
                 skipped += 1
                 continue
-            name = row.get("name", "").strip()
+            name = normalize_name(row.get("name", ""))
             p = params_lookup.get(name, {})
 
             mass = coerce_float(p.get("mass", ""))
