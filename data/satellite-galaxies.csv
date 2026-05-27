@@ -1,0 +1,52 @@
+# Major Milky Way satellite galaxies — dwarf spheroidals + Magellanic Clouds + Sagittarius
+#
+# Format: name, RA(deg), Dec(deg), distance(kpc), pmRA*(mas/yr), pmDec(mas/yr), RV(km/s), mass(M_sun), tidal_radius(pc)
+#
+# All values are approximate, drawn from Gaia DR2/EDR3 era literature:
+#   McConnachie 2012 (AJ 144), Fritz et al. 2018 (A&A 619), Battaglia et al. 2022,
+#   Vasiliev & Belokurov 2020 (MNRAS 497, Sagittarius), Kallivayalil et al. 2013 (LMC/SMC),
+#   Pawlowski & Kroupa 2020. Update from current literature for serious work.
+#
+# IMPORTANT CAVEATS:
+#
+# 1) Mass values are DYNAMICAL masses (visible + dark matter halo). For dwarf
+#    spheroidals these are dominated by dark matter and uncertain by factors
+#    of ~2-3.
+#
+# 2) These are EXTENDED structures. The tool's tidal-impulse formula treats
+#    perturbers as point masses, which is fine for impact parameter b >> the
+#    satellite's scale radius, but breaks down when b approaches r_tidal.
+#    For most past Sgr passages and any LMC/SMC encounter, the point-mass
+#    approximation is suspect. Use the rankings as suggestive, not quantitative.
+#
+# 3) Sagittarius is being tidally disrupted RIGHT NOW. Current bound mass
+#    (~4e8 M_sun) is much less than pre-disruption mass (~10^10 M_sun).
+#    For Gyr-scale backward integration, the pre-disruption mass is more
+#    relevant — increase by ~25x if testing very old passages.
+#
+# 4) Magellanic Clouds are on first infall: backward integration places them
+#    far from the Sun for all of Earth's history. They're included for
+#    completeness, but unlikely to produce close approaches in the geological
+#    record window.
+#
+# RECOMMENDED TOOL SETTINGS:
+#   Integration time: 1500-2000 Ma (longer than for clusters — Sgr orbital
+#                                   period is ~1 Gyr; need to catch multiple passes)
+#   Timestep: 0.5 Ma (coarser than for clusters is fine; satellite orbits are smooth)
+#
+# Sgr's last few perigalactic passages have been independently linked to bursts
+# of star formation in the Milky Way disk by Ruiz-Lara et al. 2020 (Nature
+# Astronomy). If anything in this catalog has stirred Earth, Sgr has.
+
+Sagittarius dSph,    283.83,  -30.55,    26.0,   -2.69,   -1.35,   140.0,  4.0e8,   2500
+LMC,                  80.89,  -69.76,    49.6,    1.910,   0.229,  262.2,  1.4e11,  13000
+SMC,                  13.16,  -72.80,    62.0,    0.797,  -1.220,  145.6,  7.0e9,   5000
+Draco,               260.05,   57.92,    76.0,   -0.012,  -0.158, -291.0,  2.2e7,    620
+Ursa Minor,          227.29,   67.22,    76.0,   -0.182,   0.074, -247.0,  1.5e7,    500
+Sculptor,             15.04,  -33.71,    86.0,    0.082,  -0.131,  111.4,  4.0e7,   1600
+Fornax,               39.997, -34.45,   147.0,    0.376,  -0.413,   55.3,  2.0e8,   2600
+Carina,              100.40,  -50.97,   106.0,    0.495,   0.143,  222.9,  1.3e7,    870
+Sextans,             153.26,   -1.61,    86.0,   -0.400,   0.040,  224.0,  5.0e7,   2000
+Leo I,               152.12,   12.31,   258.0,   -0.097,  -0.091,  282.5,  2.0e7,    600
+Leo II,              168.37,   22.15,   233.0,   -0.064,  -0.210,   78.3,  7.0e6,    400
+Canes Venatici I,    202.02,   33.56,   218.0,   -0.159,  -0.067,   30.9,  2.7e7,   1500
