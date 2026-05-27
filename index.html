@@ -189,6 +189,47 @@ button:hover {
 }
 button:disabled { opacity: 0.4; cursor: wait; }
 
+/* Preset selector — small inline buttons above the catalog textarea */
+.presets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin: 14px 0 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+.presets-label {
+  color: var(--cream-soft);
+  font-style: italic;
+  font-family: 'EB Garamond', serif;
+  font-size: 15px;
+  margin-right: 4px;
+}
+.preset-btn {
+  background: transparent;
+  color: var(--cream-soft);
+  border: 1px solid var(--rule);
+  padding: 6px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+.preset-btn:hover {
+  border-color: var(--amber);
+  color: var(--amber-bright);
+  background: transparent;
+  letter-spacing: 0.08em;
+}
+.preset-btn.active {
+  border-color: var(--amber);
+  color: var(--amber-bright);
+  background: rgba(217, 154, 58, 0.10);
+}
+
 /* Cards */
 .card {
   background: var(--bg-card);
@@ -452,7 +493,14 @@ details p { margin-bottom: 12px; }
 
   <section>
     <h2>The Catalog</h2>
-    <p class="lede">Thirteen well-known clusters, with the values you'd need for a first integration. Format per line: <code>name, RA(°), Dec(°), distance(kpc), pmRA*(mas/yr), pmDec(mas/yr), RV(km/s), mass(M☉), tidal_radius(pc)</code>. The last two are optional; mass enables the tidal-impulse ranking, tidal radius enables the geometry test. For serious work, replace these approximate Gaia-era values with the current Baumgardt &amp; Vasiliev table.</p>
+    <p class="lede">Three categories of perturber are testable in the same framework. Pick one. The bundled default is globular clusters, the original question that motivated this tool. Switching presets loads a different catalog and adjusts the integration parameters to the right timescale for each.</p>
+    <div class="presets">
+      <span class="presets-label">Load:</span>
+      <button class="preset-btn active" data-preset="clusters" type="button">Globular clusters</button>
+      <button class="preset-btn" data-preset="satellites" type="button">Satellite galaxies</button>
+      <button class="preset-btn" data-preset="stars" type="button">Stellar encounters</button>
+    </div>
+    <p class="lede">Format per line: <code>name, RA(°), Dec(°), distance(kpc), pmRA*(mas/yr), pmDec(mas/yr), RV(km/s), mass(M☉), tidal_radius(pc)</code>. The last two are optional; mass enables the tidal-impulse ranking, tidal radius enables the geometry test.</p>
     <textarea id="clusters" rows="15">
 NGC 104,    6.024,   -72.081,   4.5,   5.252,  -2.551,  -17.5,  7.1e5, 56
 NGC 5139,   201.697, -47.480,   5.4,  -3.250,  -6.755,  232.7,  3.55e6, 64
@@ -491,15 +539,15 @@ Eocene-Oligocene Boundary,    33.9, cull
     <div class="controls">
       <div class="control">
         <label>How far back (Ma)</label>
-        <input id="tMax" type="number" value="300" min="50" max="800" step="25">
+        <input id="tMax" type="number" value="300" min="1" max="2500" step="25">
       </div>
       <div class="control">
         <label>Step size (Ma)</label>
-        <input id="dt" type="number" value="0.2" min="0.05" max="2" step="0.05">
+        <input id="dt" type="number" value="0.2" min="0.001" max="2" step="0.001">
       </div>
       <div class="control">
         <label>Match window ± (Ma)</label>
-        <input id="tol" type="number" value="15" min="2" max="50" step="1">
+        <input id="tol" type="number" value="15" min="0.1" max="50" step="0.5">
       </div>
       <div class="control">
         <label>&nbsp;</label>
@@ -655,7 +703,25 @@ const CLUSTER_INFO = {
   'NGC 6752': { common: '—',              desc: 'Among the brightest globular clusters of the southern sky, in the constellation Pavo. Hosts a triple-pulsar system at its core.' },
   'NGC 6809': { common: 'M55',            desc: 'A loose, low-concentration cluster in Sagittarius — easy to resolve into individual stars in a small telescope.' },
   'NGC 7078': { common: 'M15',            desc: 'A core-collapsed cluster with the densest center of any in our galaxy. Possibly hides an intermediate-mass black hole.' },
-  'NGC 7089': { common: 'M2',             desc: 'Discovered by Maraldi in 1746 while observing a comet. Half a million stars at fifty-five thousand light-years.' }
+  'NGC 7089': { common: 'M2',             desc: 'Discovered by Maraldi in 1746 while observing a comet. Half a million stars at fifty-five thousand light-years.' },
+
+  // Satellite galaxies
+  'Sagittarius dSph':   { common: 'Sgr',           desc: 'The dwarf galaxy currently being shredded by the Milky Way — its tidal stream wraps fully around the sky. Its last three perigalactic passages have been linked to bursts of star formation in the Milky Way disk (Ruiz-Lara 2020).' },
+  'LMC':                { common: 'Large Magellanic Cloud', desc: 'Our largest satellite — a million times brighter than any globular cluster, currently on its first infall to the Milky Way after billions of years in the outer halo.' },
+  'SMC':                { common: 'Small Magellanic Cloud', desc: 'The LMC\'s smaller companion. Together they\'ve been dragging gas out of each other for hundreds of millions of years; the Magellanic Stream is the visible debris.' },
+  'Draco':              { common: 'Draco dSph',    desc: 'A faint dwarf spheroidal seventy-six kpc out, dominated by dark matter. One of the first dSphs discovered (1954).' },
+  'Ursa Minor':         { common: 'UMi dSph',      desc: 'An ancient, exclusively-old-stars dwarf spheroidal. No new stars have formed here in roughly twelve billion years.' },
+  'Sculptor':           { common: 'Scl dSph',      desc: 'First dwarf spheroidal galaxy ever recognized (Shapley, 1938). Eighty-six kpc out, in the constellation Sculptor.' },
+  'Fornax':             { common: 'For dSph',      desc: 'The most luminous classical dwarf spheroidal of the Milky Way — and the only one with its own globular clusters orbiting inside it.' },
+  'Carina':             { common: 'Car dSph',      desc: 'Unusual among dSphs for having had multiple distinct epochs of star formation. Currently being tidally distorted by Milky Way passages.' },
+  'Sextans':            { common: 'Sex dSph',      desc: 'A low-density, low-surface-brightness dSph in the constellation Sextans. Eighty-six kpc out.' },
+  'Leo I':              { common: 'Leo I dSph',    desc: 'One of the most distant Milky Way satellites at 258 kpc — possibly on its first approach.' },
+  'Leo II':             { common: 'Leo II dSph',   desc: 'Companion to Leo I at similar distance. Compact, ancient, dark-matter-dominated.' },
+  'Canes Venatici I':   { common: 'CVn I',         desc: 'A relatively recently discovered (2006) dwarf in the Canes Venatici constellation, 218 kpc distant.' },
+
+  // Famous stellar encounters
+  'Gliese 710 (HIP 89825)':       { common: 'GJ 710',   desc: 'The K7 dwarf headed almost straight at us — its proper motion is tiny because all of its velocity is along our line of sight. Will pass within 0.06 pc in about 1.3 million years, deep inside the Oort cloud.' },
+  'WISE 0720-08 (Scholz\'s Star)': { common: 'WISE 0720', desc: 'An M+T binary that passed within roughly 0.25 pc of the Sun only seventy thousand years ago, brushing the outer Oort cloud. Probably the closest stellar encounter our species has lived through.' }
 };
 
 // =================================================================
@@ -1162,6 +1228,65 @@ $('run').addEventListener('click', () => {
     s.textContent = `Loaded ${parts.join(' and ')} from data/. Ready when you are.`;
   }
 })();
+
+// =================================================================
+// PRESET SWITCHER — load alternative catalogs (satellite galaxies,
+// stellar encounters) and retune the integration parameters to the
+// appropriate timescale for each.
+// =================================================================
+
+const PRESETS = {
+  clusters: {
+    csv:      'data/clusters.csv',
+    tMax:     300,
+    dt:       0.2,
+    tol:      15,
+    blurb:    'globular clusters · 300 Ma window, 0.2 Ma step',
+  },
+  satellites: {
+    csv:      'data/satellite-galaxies.csv',
+    tMax:     1500,
+    dt:       0.5,
+    tol:      25,
+    blurb:    'satellite galaxies · 1.5 Ga window, 0.5 Ma step (Sgr orbital period is ~1 Gyr)',
+  },
+  stars: {
+    csv:      'data/stellar-encounters.csv',
+    tMax:     10,
+    dt:       0.005,
+    tol:      0.5,
+    blurb:    'stellar encounters · 10 Ma window, 5 kyr step (sub-Myr resolution required)',
+  },
+};
+
+document.querySelectorAll('.preset-btn').forEach(btn => {
+  btn.addEventListener('click', async () => {
+    const which = btn.dataset.preset;
+    const p = PRESETS[which];
+    if (!p) return;
+
+    // Visual: mark this button active
+    document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    setStatus(`Loading ${p.csv}…`, true);
+    try {
+      const resp = await fetch(p.csv, { cache: 'no-store' });
+      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+      const text = await resp.text();
+      document.getElementById('clusters').value = text.trimEnd();
+
+      // Retune the integration parameters for this category's timescale
+      document.getElementById('tMax').value = p.tMax;
+      document.getElementById('dt').value   = p.dt;
+      document.getElementById('tol').value  = p.tol;
+
+      setStatus(`Loaded ${p.blurb}. Ready when you are.`);
+    } catch (e) {
+      setStatus(`Could not load ${p.csv}: ${e.message}. Check that the file exists in data/.`);
+    }
+  });
+});
 </script>
 </body>
 </html>
